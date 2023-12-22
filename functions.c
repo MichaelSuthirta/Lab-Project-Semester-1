@@ -29,7 +29,7 @@ void cls(){
 	system("cls");
 }
 
-char display(){
+void display(){
 	char map[8][8];
 	int x,y;
 	
@@ -57,15 +57,33 @@ int gameStats(int x,int y){
 	}
 }
 
+void showLife(int *hp){
+	int i;
+	int x=*hp;
+	printf("Life: ");
+	for(i=1;i<=x;i++){
+		printf("o ");
+	}
+	printf("\n");
+}
+
+void showGold(int *gold){
+	printf("Gold: %d\n",*gold);
+}
+
 void game(){
 	cls();
-	display();
 	int hp=3, safe=2, gold=0;
 	int x,y;
+	int *life=&hp;
+	int *score=&gold;
 	int res=0;
 	int prevRes=0, goldCount=0, emptyCount=0;
-	printf("\nDigging coordinate (x y):\n");
 	while(hp!=0){
+		showLife(life);
+		showGold(score);
+		display();
+		printf("\nDigging coordinate (x y):\n");
 		scanf("%d %d",&x,&y);
 		if(x>8 || y>8){
 			printf("Please dig between the 8x8 field.\n");
@@ -127,8 +145,9 @@ void game(){
 				break;
 			}
 		}
+		cls();
 	}
-	if(hp==0){
+	if(*life==0){
 		char input;
 		cls();
 		printf("Game Over!\n");
