@@ -14,6 +14,27 @@ int menu(){
 	return choice;
 }
 
+int readScore(){
+    FILE *fscore = fopen("score.txt", "r");
+    int score=1;
+    int highScore=0;
+    while(!feof(fscore)){	
+  	  fscanf(fscore, "%d", &score);
+  	  if(score>highScore){
+			highScore=score;
+		}
+	}
+    fclose(fscore);
+    return highScore;
+}
+
+void saveScore(int score){
+    FILE *fscore = fopen("score.txt", "a+");
+    fprintf(fscore, "%d\n", score);
+    fclose(fscore);
+    printf("%d", score);
+}
+
 void tutorial(){
 	printf("\tWelcome to The Gold Mine. In this game, you'll work as a miner in an abandoned gold mine that has just been reopened. ");
 	printf("Your task is to gather as many gold ores as possible."
@@ -47,16 +68,6 @@ void display(){
 	}
 }
 
-int gameStats(int x,int y){
-	int mapVal[8][8];
-	
-	for(x=0;x<8;x++){
-		for(y=0;y<8;y++){
-			mapVal[x][y]=1;
-		}
-	}
-}
-
 void showLife(int *hp){
 	int i;
 	int x=*hp;
@@ -87,6 +98,8 @@ void game(){
 		scanf("%d %d",&x,&y);
 		if(x>8 || y>8){
 			printf("Please dig between the 8x8 field.\n");
+			sleep(1);
+			cls();
 			continue;
 		}
 		srand(time(0));
@@ -117,6 +130,7 @@ void game(){
 			}
 			emptyCount=0;
 		}
+		cls();
 		switch(res){
 			case 1:{
 				printf("Gold.\n");
@@ -145,9 +159,11 @@ void game(){
 				break;
 			}
 		}
+		sleep(1);
 		cls();
 	}
 	if(*life==0){
+		saveScore(gold);
 		char input;
 		cls();
 		printf("Game Over!\n");

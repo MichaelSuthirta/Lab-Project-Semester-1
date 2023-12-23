@@ -4,6 +4,8 @@
 /* run this program using the console pauser or add your own getch, system("pause") or input loop */
 extern int menu();
 extern void game();
+extern int readScore();
+extern void saveScore(int score);
 extern void tutorial();
 extern void cls();
 
@@ -21,9 +23,18 @@ int main(int argc, char *argv[]) {
 		switch(input){
 			case 1:{
 				game();
+				goto mainMenu;
 				break;
 			}
 			case 2:{
+				cls();
+				int score = readScore();
+            	printf("The best score is: %d\n", score);
+            	printf("\nPress x to go back.\n");
+				while(buttonPress!='x'&&buttonPress!='X'){
+					scanf("%c",&buttonPress);
+				}
+				goto mainMenu;
 				break;
 			}
 			case 3:{
@@ -43,7 +54,7 @@ int main(int argc, char *argv[]) {
 			}
 			default:{
 				cls();
-				menu();
+				goto mainMenu;
 				break;
 			}
 		}
