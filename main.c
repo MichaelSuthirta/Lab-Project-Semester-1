@@ -7,7 +7,7 @@ extern int checkName();
 extern void saveName(char name[100]);
 extern void game(char map[8][8]);
 extern int readScore();
-//extern int search(int n);
+extern int search(int n);
 extern void tutorial();
 extern void cls();
 
@@ -67,12 +67,18 @@ int main(int argc, char *argv[]) {
 					goto mainMenu;
 				}
 				else{
-//					int key;
-//					printf("The n-th run you want to search: ");
-//					scanf("%d",&key);
-//					float x=search(key);
-//					printf("Result:\n");
-//					printf("Run: %d		Score: %.0f\n",key,x);
+					cls();
+					int key;
+					printf("The n-th run you want to search: ");
+					scanf("%d",&key);
+					float x=search(key);
+					if(x!=-1){
+						printf("Result:\n");
+						printf("Run: %d    Score: %.0f\n",key,x);
+					}
+					else{
+						printf("Item not found.\n");
+					}
 					printf("\nPress x to go back.\n");
 					while(buttonPress!='x'&&buttonPress!='X'){
 						scanf("%c",&buttonPress);
