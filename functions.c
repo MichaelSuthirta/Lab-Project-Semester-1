@@ -71,7 +71,6 @@ void sort(int arr1[],float arr2[],int size){
 }
 
 int readScore(){
-	struct playData data[100000];
     FILE *fscore = fopen("score.txt", "r");
     int i=0;
     int run[100000];
@@ -83,10 +82,6 @@ int readScore(){
 	}
     fclose(fscore);
 	int size=i;
-//	for(int n=0;n<size;n++){
-//		data[n].play=run[n];
-//		data[n].score=scoreList[n];
-//	}
 	sort(run,scoreList,size);
 	puts("Top 3 Runs with Highest Score:");
 	for(i=0;i<3;i++){
@@ -97,40 +92,40 @@ int readScore(){
 	printf("Average of the top 3: %.2f\n",avg);
 }
 
-//int binSearch(int arr1[],float arr2[],int key,int left, int right){
-//	if(left>right){
-//		return -1;
-//	}
-//	int r;
-//	float s;
-//	int mid=(left+right)/2;
-//	if(key==arr1[mid]){
-//		return mid;
-//	}
-//	else if(key<arr1[mid]){
-//		return binSearch(arr1,arr2,key,left, mid-1);
-//	}
-//	else{
-//		return binSearch(arr1,arr2,key,mid+1,right);
-//	}
-//}
+int binSearch(int arr1[],float arr2[],int key,int left, int right){
+	if(left>right){
+		return -1;
+	}
+	int r;
+	float s;
+	int mid=(left+right)/2;
+	if(key==arr1[mid]){
+		return mid;
+	}
+	else if(key<arr1[mid]){
+		return binSearch(arr1,arr2,key,left, mid-1);
+	}
+	else{
+		return binSearch(arr1,arr2,key,mid+1,right);
+	}
+}
 
-//int search(int n){
-//	int run[100000];
-//	float score[100000];
-//	struct playData data[100000];
-//	int i=0;
-//	while(data[i].play!='\0'){
-//		run[i]=data[i].play;
-//		score[i]=data[i].score;
-//		i++;
-//	}
-//	int index=binSearch(run,score,n,0,i-1);
-//	if(index==-1){
-//		printf("Item not found.\n");
-//	}
-//	else return score[index];
-//}
+int search(int n){
+	int run[100000];
+	float score[100000];
+	int i=0;
+	FILE* fp=fopen("score.txt","r");
+	while(!feof(fp)){
+		fscanf(fp,"%d|%f",&run[i],&score[i]);
+		i++;
+	}
+	fclose(fp);
+	int index=binSearch(run,score,n,0,i-1);
+	if(index==-1){
+		return -1;
+	}
+	else return score[index];
+}
 
 void tutorial(){
 	printf("\tWelcome to The Gold Mine. In this game, you'll work as a miner in an abandoned gold mine that has just been reopened. ");
@@ -204,7 +199,7 @@ void game(char map[8][8]){
 		if(res==3 && res==prevRes){
 			res=(rand()%(3))+1;
 		}
-		if(goldCount==4 && res==1){
+		if(goldCount==3 && res==1){
 			res+=((rand()%2)+1);
 			goldCount=0;
 		}
