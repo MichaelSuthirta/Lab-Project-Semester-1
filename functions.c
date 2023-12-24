@@ -2,11 +2,6 @@
 #include<stdlib.h>
 #include<time.h>
 
-struct playData{
-	int play;
-	float score;
-};
-
 int checkName(){
 	FILE* fp=fopen("user.txt","r");
 	fseek(fp,0,SEEK_END);
