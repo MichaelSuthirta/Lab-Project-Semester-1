@@ -83,10 +83,10 @@ int readScore(){
 	}
     fclose(fscore);
 	int size=i;
-	for(int n=0;n<size;n++){
-		data[n].play=run[n];
-		data[n].score=scoreList[n];
-	}
+//	for(int n=0;n<size;n++){
+//		data[n].play=run[n];
+//		data[n].score=scoreList[n];
+//	}
 	sort(run,scoreList,size);
 	puts("Top 3 Runs with Highest Score:");
 	for(i=0;i<3;i++){
