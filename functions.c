@@ -2,6 +2,11 @@
 #include<stdlib.h>
 #include<time.h>
 
+struct playData{
+	int play;
+	float score;
+};
+
 int checkName(){
 	FILE* fp=fopen("user.txt","r");
 	fseek(fp,0,SEEK_END);
@@ -30,26 +35,102 @@ int menu(){
 	return choice;
 }
 
-int readScore(){
-    FILE *fscore = fopen("score.txt", "r");
-    int score=1;
-    int highScore=0;
-    while(!feof(fscore)){	
-  	  fscanf(fscore, "%d", &score);
-  	  if(score>highScore){
-			highScore=score;
-		}
+
+int findRunAmt(){
+	int run=0;
+	int score=0;
+	FILE* fp=fopen("score.txt","r");
+	while(!feof(fp)) {
+		fscanf(fp,"%d|%d",&run,&score);
 	}
-    fclose(fscore);
-    return highScore;
+	fclose(fp);
+	return run;
 }
 
-void saveScore(int score){
+void saveScore(int run,int score){
     FILE *fscore = fopen("score.txt", "a+");
-    fprintf(fscore, "%d\n", score);
+    fprintf(fscore, "%d|%d\n", run, score);
     fclose(fscore);
-    printf("%d", score);
 }
+
+void sort(int arr1[],float arr2[],int size){
+	int m,n;
+	
+	for(m=1;m<size;m++){
+		float temp=arr2[m];
+		int t=arr1[m];
+		n=m-1;
+		while(n>=0 && arr2[n]<temp){
+			arr2[n+1]=arr2[n];
+			arr1[n+1]=arr1[n];
+			n--;
+		}
+		arr2[n+1]=temp;
+		arr1[n+1]=t;
+	}
+}
+
+int readScore(){
+	struct playData data[100000];
+    FILE *fscore = fopen("score.txt", "r");
+    int i=0;
+    int run[100000];
+    float scoreList[100000];
+    float totalScore=0;
+    while(!feof(fscore)){
+		fscanf(fscore, "%d|%f", &run[i],&scoreList[i]);
+		i++;
+	}
+    fclose(fscore);
+	int size=i;
+//	for(int n=0;n<size;n++){
+//		data[n].play=run[n];
+//		data[n].score=scoreList[n];
+//	}
+	sort(run,scoreList,size);
+	puts("Top 3 Runs with Highest Score:");
+	for(i=0;i<3;i++){
+		printf("Run %d: %.0f\n",run[i],scoreList[i]);
+		totalScore=totalScore+scoreList[i];
+	}
+	float avg=totalScore/3;
+	printf("Average of the top 3: %.2f\n",avg);
+}
+
+//int binSearch(int arr1[],float arr2[],int key,int left, int right){
+//	if(left>right){
+//		return -1;
+//	}
+//	int r;
+//	float s;
+//	int mid=(left+right)/2;
+//	if(key==arr1[mid]){
+//		return mid;
+//	}
+//	else if(key<arr1[mid]){
+//		return binSearch(arr1,arr2,key,left, mid-1);
+//	}
+//	else{
+//		return binSearch(arr1,arr2,key,mid+1,right);
+//	}
+//}
+
+//int search(int n){
+//	int run[100000];
+//	float score[100000];
+//	struct playData data[100000];
+//	int i=0;
+//	while(data[i].play!='\0'){
+//		run[i]=data[i].play;
+//		score[i]=data[i].score;
+//		i++;
+//	}
+//	int index=binSearch(run,score,n,0,i-1);
+//	if(index==-1){
+//		printf("Item not found.\n");
+//	}
+//	else return score[index];
+//}
 
 void tutorial(){
 	printf("\tWelcome to The Gold Mine. In this game, you'll work as a miner in an abandoned gold mine that has just been reopened. ");
@@ -57,9 +138,9 @@ void tutorial(){
 	" However, there are bombs in the mine, left by the previous workers in the mine. ");
 	printf("You must avoid the bombs. However, you aren't provided with safety measures and can only rely on leftover safety kit."
 	" You can dig at ");
-	printf("any coordinate among the provided 8x8 field. When digging, there's a chance one of the following items will appear:\n");
+	printf("any coordinate among the provided 8x8 field. When digging, there's a chance one of the following items will appear:\n\n");
 	printf("1. Gold. It adds to your score.\n2. Bomb. It decreases your lifepoint.\n");
-	printf("3. Empty.\n4. Safety kit. It restores your lifepoint.\nEnjoy the game!");
+	printf("3. Empty.\n4. Safety kit. It restores your lifepoint.\n\nEnjoy the game!");
 }
 
 void cls(){
@@ -69,8 +150,8 @@ void cls(){
 void display(char map[8][8]){
 	int x,y;
 
-	for(x=0;x<8;x++){
-		for(y=0;y<8;y++){
+	for(y=0;y<8;y++){
+		for(x=0;x<8;x++){
 			printf("%c ",map[x][y]);
 		}
 		printf("\n");
@@ -95,11 +176,13 @@ void game(char map[8][8]){
 	cls();
 	int hp=3, safe=2, gold=0;
 	int x,y;
+	int run=0;
 	int *life=&hp;
 	int *score=&gold;
 	int res=0;
 	int prevRes=0, goldCount=0, emptyCount=0;
 	while(hp!=0){
+		run=findRunAmt();
 		showLife(life);
 		showGold(score);
 		display(map);
@@ -173,7 +256,8 @@ void game(char map[8][8]){
 		cls();
 	}
 	if(*life==0){
-		saveScore(gold);
+		run++;
+		saveScore(run,gold);
 		char input;
 		cls();
 		printf("Game Over!\n");
