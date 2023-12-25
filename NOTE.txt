@@ -1,0 +1,7 @@
+File yang digunakan adalah Game Project Lab.dev, sebagai file yang menggabungkan antara main.c sebagai file utama dan function.c sebagai file untuk menampung function untuk game.
+
+File score kosong, tetapi untuk mengecek fungsionalitas pencatatan highscore, dapat menggunakan format seperti ini
+
+1|7
+2|8
+3|12
