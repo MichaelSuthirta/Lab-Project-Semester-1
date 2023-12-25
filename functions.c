@@ -30,7 +30,6 @@ int menu(){
 	return choice;
 }
 
-
 int findRunAmt(){
 	int run=0;
 	int score=0;
@@ -178,7 +177,7 @@ void game(char map[8][8]){
 		display(map);
 		printf("\nDigging coordinate (x y): (Coordinate starts from (1 1) to (8 8))\n");
 		scanf("%d %d",&x,&y);
-		if(x>8 || y>8){
+		if(x>8 || y>8 || x<1 || y<1){
 			printf("Please dig between the 8x8 field.\n");
 			sleep(1);
 			cls();
